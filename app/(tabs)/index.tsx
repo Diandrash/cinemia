@@ -1,21 +1,18 @@
+import SliderMovie from '@/components/SliderMovie';
 import { getPopularMovies } from '@/services/api';
 import { Movie } from '@/types/movie';
-import { useEffect, useState } from 'react';
-import {
-  Image,
-  StyleSheet,
-  Platform,
-  View,
-  Text,
-  ImageBackground,
-  Dimensions,
-} from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import Carousel from 'react-native-snap-carousel';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, ImageBackground, Text, View } from 'react-native';
+import { useSharedValue } from 'react-native-reanimated';
+import { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 export default function HomeScreen() {
   const [popularMovies, setPopularMovies] = useState<Array<Movie>>([]);
-  const navLinks = ['Home', 'About', 'Services', 'Contact Us'];
+
+  const imageURLs = popularMovies.slice(0, 8).map((movie) => {
+    const path = `${process.env.EXPO_PUBLIC_IMAGE_URL}${movie.poster_path}`;
+    return path;
+  });
 
   useEffect(() => {
     getPopularMovies()
@@ -37,10 +34,15 @@ export default function HomeScreen() {
         flex: 1,
         width,
         height,
-        padding: 20,
+        // padding: 20,
       }}
     >
-      <View className="top-info">
+      <View
+        className="top-info"
+        style={{
+          padding: 20,
+        }}
+      >
         <Text
           style={{
             color: 'white',
@@ -49,28 +51,8 @@ export default function HomeScreen() {
         >
           Cinemia
         </Text>
-
-        <ScrollView
-          horizontal
-          contentContainerStyle={{ paddingVertical: 20 }}
-          showsHorizontalScrollIndicator={false}
-        >
-          {popularMovies.map((movie) => {
-            const imagePath = `${process.env.EXPO_PUBLIC_IMAGE_URL}${movie.poster_path}`;
-            return (
-              <Image
-                source={{ uri: imagePath }}
-                style={{
-                  width: width * 0.53,
-                  height: 400,
-                  marginHorizontal: 5,
-                  borderRadius: 10,
-                }}
-              />
-            );
-          })}
-        </ScrollView>
       </View>
+      <SliderMovie data={imageURLs} />
     </ImageBackground>
   );
 }
