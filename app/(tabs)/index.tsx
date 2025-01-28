@@ -17,7 +17,6 @@ export default function HomeScreen() {
   useEffect(() => {
     getPopularMovies()
       .then((data) => {
-        console.log(data);
         setPopularMovies(data.results);
       })
       .catch((err) => {
