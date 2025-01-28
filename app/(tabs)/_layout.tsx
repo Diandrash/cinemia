@@ -31,6 +31,13 @@ export default function TabLayout() {
           tabBarStyle: { display: 'none' },
         }}
       />
+      {/* <Tabs.Screen
+        name="detail"
+        options={{
+          title: 'Detail',
+          tabBarStyle: { display: 'none' },
+        }}
+      /> */}
     </Tabs>
   );
 }

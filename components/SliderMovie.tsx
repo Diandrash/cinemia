@@ -13,7 +13,7 @@ import PaginationMovie from './PaginationMovie';
 import { useEffect, useRef, useState } from 'react';
 
 type SliderMovieProps = {
-  data: Array<string>;
+  data: Array<Movie>;
 };
 
 const SliderMovie = (props: SliderMovieProps) => {
@@ -21,7 +21,7 @@ const SliderMovie = (props: SliderMovieProps) => {
 
   const scrollX = useSharedValue(0);
   const [paginationIndex, setPaginationIndex] = useState<number>(0);
-  const [movieData, setMovieData] = useState<Array<string>>(props.data);
+  const [movieData, setMovieData] = useState<Array<Movie>>(props.data);
   const ref = useAnimatedRef<Animated.FlatList<any>>();
   const [isAutoPlay, setIsAutoPlay] = useState<boolean>(true);
   const interval = useRef<NodeJS.Timeout>();
@@ -31,29 +31,36 @@ const SliderMovie = (props: SliderMovieProps) => {
     onScroll: (e) => {
       scrollX.value = e.contentOffset.x;
     },
+    onMomentumEnd: (e) => {
+      offset.value = e.contentOffset.x;
+    },
   });
 
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 50,
   };
 
-  // useEffect(() => {
-  //   if (isAutoPlay) {
-  //     interval.current = setInterval(() => {
-  //       offset.value = offset.value + width;
-  //     }, 5000);
-  //   } else {
-  //     clearInterval(interval.current);
-  //   }
+  useEffect(() => {
+    setMovieData(props.data);
+  }, [props.data]);
 
-  //   return () => {
-  //     clearInterval(interval.current);
-  //   };
-  // }, [isAutoPlay, offset, width]);
+  useEffect(() => {
+    if (isAutoPlay) {
+      interval.current = setInterval(() => {
+        offset.value = offset.value + width;
+      }, 5000);
+    } else {
+      clearInterval(interval.current);
+    }
 
-  // useDerivedValue(() => {
-  //   scrollTo(ref, offset.value, 0, true);
-  // });
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, [isAutoPlay, offset, width]);
+
+  useDerivedValue(() => {
+    scrollTo(ref, offset.value, 0, true);
+  });
 
   const onViewableItemsChanged = ({
     viewableItems,
@@ -75,7 +82,7 @@ const SliderMovie = (props: SliderMovieProps) => {
   return (
     <View>
       <Animated.FlatList
-        // ref={ref}
+        ref={ref}
         data={movieData}
         removeClippedSubviews={false}
         renderItem={({ item, index }) => (
@@ -87,15 +94,21 @@ const SliderMovie = (props: SliderMovieProps) => {
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-        // onEndReached={() => setMovieData([...movieData, ...props.data])}
-        // onEndReachedThreshold={0.5}
+        onEndReached={() => setMovieData([...movieData, ...props.data])}
+        onEndReachedThreshold={0.5}
+        onScrollBeginDrag={() => {
+          setIsAutoPlay(false);
+        }}
+        onScrollEndDrag={() => {
+          setIsAutoPlay(true);
+        }}
       />
 
-      <PaginationMovie
+      {/* <PaginationMovie
         items={props.data}
         scrollX={scrollX}
         paginationIndex={paginationIndex}
-      />
+      /> */}
     </View>
   );
 };

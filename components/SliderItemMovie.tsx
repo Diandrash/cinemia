@@ -1,4 +1,6 @@
+import { Movie } from '@/types/movie';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Link } from 'expo-router';
 import { Dimensions, Image, View } from 'react-native';
 import Animated, {
   Extrapolation,
@@ -8,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 type SliderItemMovieProps = {
-  item: string;
+  item: Movie;
   index: number;
   scrollX: SharedValue<number>;
 };
@@ -58,14 +60,23 @@ const SliderItemMovie = (props: SliderItemMovieProps) => {
         reAnimatedStyle,
       ]}
     >
-      <Image
-        source={{ uri: props.item }}
-        style={{
-          width: 260,
-          height: 400,
-          borderRadius: 10,
+      <Link
+        href={{
+          pathname: '/(tabs)/details/[id]',
+          params: { id: props.item.id },
         }}
-      />
+      >
+        <Image
+          source={{
+            uri: `${process.env.EXPO_PUBLIC_IMAGE_URL}${props.item.poster_path}`,
+          }}
+          style={{
+            width: 260,
+            height: 400,
+            borderRadius: 10,
+          }}
+        />
+      </Link>
     </Animated.View>
   );
 };
