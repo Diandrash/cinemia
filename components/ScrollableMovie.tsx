@@ -38,7 +38,7 @@ const ScrollableMovie = (props: ScrollableMovieProps) => {
       >
         {props.movies.map((movie, index) => (
           <Link
-            key={index}
+            key={`${movie.id}-${index}-movie`}
             href={{
               pathname: '/(tabs)/details/[id]',
               params: { id: movie.id },

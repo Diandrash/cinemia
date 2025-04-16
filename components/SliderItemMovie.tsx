@@ -50,6 +50,7 @@ const SliderItemMovie = (props: SliderItemMovieProps) => {
   });
   return (
     <Animated.View
+      key={`${props.item.id}-${props.index}-slider`}
       style={[
         {
           justifyContent: 'center',

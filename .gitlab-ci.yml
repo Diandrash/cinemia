@@ -1,0 +1,14 @@
+stages:
+  - build
+
+expo-build:
+  image: node:18
+  stage: build
+  before_script:
+    - npm install -g eas-cli
+  script:
+    - yarn install
+    - eas build --platform android --non-interactive --profile production --token $EXPO_TOKEN
+  artifacts:
+    paths:
+      - dist

@@ -165,7 +165,7 @@ export default function Detail() {
               : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
             return (
               <View
-                key={index}
+                key={`${review.id}-${index}-detail`}
                 style={{
                   //   flex: 1,
                   flexDirection: 'column',
