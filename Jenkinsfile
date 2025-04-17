@@ -28,7 +28,7 @@ pipeline {
 
         stage('Build APK (Optional)') {
             steps {
-                bat 'npx eas build --platform android --profile development'
+                bat 'eas build -p android --profile preview'
             }
         }
     }
