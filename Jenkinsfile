@@ -26,6 +26,18 @@ pipeline {
             }
         }
 
+        stage('Install EAS package globally') {
+            steps {
+                bat 'npm install -g eas-cli'
+            }
+        }
+
+        stage('Check EAS package Version') {
+            steps {
+                bat 'eas --version'
+            }
+        }
+
         stage('Build APK (Optional)') {
             steps {
                 bat 'eas build -p android --profile preview'
