@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         EXPO_TOKEN = credentials('expo-token') 
-        PATH = "C:\\Users\\farel.shadeva\\AppData\\Local\\Programs\\Git\\cmd;%PATH%"
     }
     stages {
         stage('Install Dependencies') {
