@@ -53,6 +53,12 @@ pipeline {
         }
 
 
+        stage('Check GIT Version') {
+            steps {
+                bat 'git version'
+            }
+        }
+
         stage('Build Android APK') {
             steps {
                 bat '''
