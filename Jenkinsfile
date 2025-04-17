@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    environment {
+        EXPO_TOKEN = credentials('expo-token') 
+    }
     stages {
         stage('Install Dependencies') {
             steps {
