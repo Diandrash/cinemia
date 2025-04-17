@@ -32,17 +32,25 @@ pipeline {
             }
         }
 
-        stage('Check EAS package Version') {
+        stage('Check EAS Version') {
             steps {
-                bat 'eas --version'
+                bat '''
+                    SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
+                    eas --version
+                '''
             }
         }
 
-        stage('Build APK (Optional)') {
+
+        stage('Build Android Preview') {
             steps {
-                bat 'eas build -p android --profile preview'
+                bat '''
+                    SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
+                    eas build -p android --profile preview
+                '''
             }
         }
+
     }
 
     post {
