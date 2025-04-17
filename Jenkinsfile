@@ -43,6 +43,15 @@ pipeline {
             }
         }
 
+        stage('Check EAS Username') {
+            steps {
+                bat '''
+                    SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
+                    eas whoami --token %EXPO_TOKEN%
+                '''
+            }
+        }
+
 
         stage('Build Android Preview') {
             steps {
