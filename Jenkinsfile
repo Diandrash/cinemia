@@ -55,7 +55,7 @@ pipeline {
 
         stage('Check GIT Version') {
             steps {
-                bat 'git version'
+                bat 'set PATH=C:\\Users\\farel.shadeva\\AppData\\Local\\Programs\\Git\\cmd;%PATH% && git --version'
             }
         }
 
