@@ -53,11 +53,11 @@ pipeline {
         }
 
 
-        stage('Build Android Preview') {
+        stage('Build Android APK') {
             steps {
                 bat '''
                     SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
-                    eas build -p android --profile preview --non-interactive --no-wait 
+                    eas build -p android --non-interactive --no-wait 
                 '''
             }
         }
