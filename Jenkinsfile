@@ -63,6 +63,7 @@ pipeline {
             steps {
                 bat '''
                     SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
+                    set PATH=C:\\Users\\farel.shadeva\\AppData\\Local\\Programs\\Git\\cmd;%PATH%
                     eas build -p android --non-interactive --no-wait 
                 '''
             }
