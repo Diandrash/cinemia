@@ -47,7 +47,7 @@ pipeline {
             steps {
                 bat '''
                     SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
-                    eas whoami --token %EXPO_TOKEN%
+                    eas whoami --non-interactive
                 '''
             }
         }
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 bat '''
                     SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
-                    eas build -p android --profile preview --token %EXPO_TOKEN%
+                    eas build -p android --profile preview --non-interactive --no-wait 
                 '''
             }
         }
