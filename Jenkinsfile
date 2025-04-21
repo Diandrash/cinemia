@@ -69,7 +69,52 @@ pipeline {
             }
         }
 
-    }
+        stage('Wait & Download APK') {
+            steps {
+                script {
+                    // Ambil build ID dari file JSON
+                    def buildId = bat(
+                        script: 'powershell -Command "(Get-Content build-info.json | ConvertFrom-Json).id"',
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Build ID: ${buildId}"
+
+                    // Poll status sampai selesai
+                    def buildUrl = ''
+                    timeout(time: 15, unit: 'MINUTES') {
+                        waitUntil {
+                            def result = bat(
+                                script: "curl -s https://api.expo.dev/v2/builds/${buildId} -H \"Authorization: Bearer ${env.EXPO_TOKEN}\"",
+                                returnStdout: true
+                            ).trim()
+
+                            echo "Build Status JSON: ${result}"
+
+                            if (result.contains('"status":"finished"')) {
+                                def match = result =~ /"artifacts":\{"buildUrl":"([^"]+\.apk)"/
+                                if (match) {
+                                    buildUrl = match[0][1]
+                                    echo "Build URL: ${buildUrl}"
+                                }
+                                return true
+                            } else if (result.contains('"status":"errored"')) {
+                                error("Expo Build Failed!")
+                            }
+                            return false
+                        }
+                    }
+
+                    // Download APK
+                    if (buildUrl) {
+                        bat "curl -o build-output/app.apk ${buildUrl}"
+                        echo "APK downloaded to build-output/app.apk"
+                    } else {
+                        error("Gagal mendapatkan URL APK dari build result.")
+                    }
+                }
+            }
+        }
 
     post {
         always {
