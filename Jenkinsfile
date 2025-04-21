@@ -70,36 +70,37 @@ pipeline {
         }
 
         stage('Wait & Download APK') {
+            environment {
+                AUTH = "Bearer ${EXPO_TOKEN}"
+            }
             steps {
                 script {
-                    // Ambil build ID dari file JSON
+                    // Ambil buildId dari file JSON hasil build
                     def buildId = bat(
                         script: 'powershell -Command "(Get-Content build-info.json | ConvertFrom-Json).id"',
                         returnStdout: true
                     ).trim()
-
+                    
                     echo "Build ID: ${buildId}"
 
-                    // Poll status sampai selesai
-                    def buildUrl = ''
+                    // Polling Expo sampai statusnya "finished"
+                    def buildUrl = ""
                     timeout(time: 15, unit: 'MINUTES') {
                         waitUntil {
-                            def result = bat(
-                                script: "curl -s https://api.expo.dev/v2/builds/${buildId} -H \"Authorization: Bearer ${env.EXPO_TOKEN}\"",
-                                returnStdout: true
-                            ).trim()
+                            bat """
+                                powershell -Command "$headers = @{ Authorization = '$env:AUTH' }; Invoke-RestMethod -Uri 'https://api.expo.dev/v2/builds/${buildId}' -Headers $headers | ConvertTo-Json -Depth 10" > build-result.json
+                            """
 
-                            echo "Build Status JSON: ${result}"
-
+                            def result = readFile('build-result.json')
                             if (result.contains('"status":"finished"')) {
-                                def match = result =~ /"artifacts":\{"buildUrl":"([^"]+\.apk)"/
+                                def match = result =~ /"buildUrl"\s*:\s*"([^"]+\.apk)"/
                                 if (match) {
                                     buildUrl = match[0][1]
-                                    echo "Build URL: ${buildUrl}"
+                                    echo "Download URL: ${buildUrl}"
                                 }
                                 return true
                             } else if (result.contains('"status":"errored"')) {
-                                error("Expo Build Failed!")
+                                error("Expo build failed.")
                             }
                             return false
                         }
@@ -107,17 +108,22 @@ pipeline {
 
                     // Download APK
                     if (buildUrl) {
-                        bat "curl -o build-output/app.apk ${buildUrl}"
-                        echo "APK downloaded to build-output/app.apk"
+                        bat "mkdir build-output"
+                        bat "curl -L -o build-output/app.apk ${buildUrl}"
+                        echo "APK downloaded to: build-output/app.apk"
                     } else {
-                        error("Gagal mendapatkan URL APK dari build result.")
+                        error("Failed to retrieve APK download URL.")
                     }
                 }
             }
         }
+
     }
 
     post {
+        success {
+            archiveArtifacts artifacts: 'build-output/app.apk', fingerprint: true
+        },
         always {
             echo 'Test completed'
         }
