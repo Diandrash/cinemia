@@ -149,7 +149,7 @@ android {
 // IronSKY
 repositories {
     flatDir {
-        dirs: 'libs'
+        dirs = ['libs']
     }
 }
 
