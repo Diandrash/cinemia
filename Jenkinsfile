@@ -88,7 +88,7 @@ pipeline {
                     timeout(time: 15, unit: 'MINUTES') {
                         waitUntil {
                             bat """
-                                powershell -Command "$headers = @{ Authorization = '$env:AUTH' }; Invoke-RestMethod -Uri 'https://api.expo.dev/v2/builds/${buildId}' -Headers $headers | ConvertTo-Json -Depth 10" > build-result.json
+                                 powershell -Command "$headers = @{ Authorization = 'Bearer ${EXPO_TOKEN}' }; Invoke-RestMethod -Uri 'https://api.expo.dev/v2/builds/${buildId}' -Headers \$headers | ConvertTo-Json -Depth 10 > build-result.json"
                             """
 
                             def result = readFile('build-result.json')
