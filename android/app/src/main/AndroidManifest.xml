@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.shadeva.firstreact">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.seciron.newonline">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -25,7 +25,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
-        <data android:scheme="com.shadeva.firstreact"/>
+        <data android:scheme="com.seciron.newonline"/>
       </intent-filter>
     </activity>
   </application>

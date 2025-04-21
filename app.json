@@ -16,7 +16,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shadeva.firstreact"
+      "package": "com.seciron.newonline"
     },
     "web": {
       "bundler": "metro",

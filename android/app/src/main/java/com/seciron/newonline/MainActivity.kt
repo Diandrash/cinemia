@@ -1,4 +1,4 @@
-package com.shadeva.firstreact
+package com.seciron.newonline
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

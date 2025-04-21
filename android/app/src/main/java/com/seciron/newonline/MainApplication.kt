@@ -1,4 +1,4 @@
-package com.shadeva.firstreact
+package com.seciron.newonline
 
 import android.app.Application
 import android.content.res.Configuration
