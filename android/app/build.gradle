@@ -146,7 +146,19 @@ android {
     }
 }
 
+// IronSKY
+repositories {
+    flatDir {
+        dirs: 'libs'
+    }
+}
+
 dependencies {
+
+    // IronSKY
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation(name:'appsec-sdk-release-public-2024051601',ext:'aar')
+
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 

@@ -12,6 +12,11 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 import expo.modules.ReactActivityDelegateWrapper
 
 class MainActivity : ReactActivity() {
+
+  companion object {
+    lateinit var DEVINFO: JSONObject
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     // Set the theme to AppTheme BEFORE onCreate to support
     // coloring the background, status bar, and navigation bar.
@@ -62,4 +67,59 @@ class MainActivity : ReactActivity() {
       // because it's doing more than [Activity.moveTaskToBack] in fact.
       super.invokeDefaultOnBackPressed()
   }
+}
+
+private fun registerSecurityEventCallback(){
+  RiskStubAPI.initEventResponse(this)
+
+  RiskStubAPI.registerService(object: CallBack {
+    override fun onResult(type: Type, result: Any) {
+      val jsonObject =  result as JSONObject
+      val responseI18n = jsonObject.optString("responseI18n")
+      val key = jsonObject.optString("key")
+
+      Log.d("responseI18n", responseI18n)
+      Log.d("ruleengine", "onReceive:$key")
+
+      val responseType = jsonObject.optInt("responseType", -1)
+    }
+  }, Type.RISKEVENT, 0.5)
+}
+
+private fun registerDeviceInfoCallback() {
+  RiskStubAPI.registerService(object: CallBack {
+    override fun onResult(type: Type, result: Any) {
+      val jsonObject = result as JSONObject
+
+      DEVINFO = jsonObject
+
+    }
+  }, DEVINFO, 0.5)
+}
+
+private fun initializeRiskStubAPI() {
+  val key = "+a88XBOU/bvfk6al7Sliekw/mW7CO7nMaHAXk44fM5pI/HI+Q3wuIMHkZpB7e2/MHChuvKlm+9ca1F6Pc+oIEe05hLToa3V5jysIMJ9OLDAbxhQEavEiURX3offMH8N6L4X6JfOo1a1gtus8bCMWwyhPO9rigy12M2l0trMI8DcNEvptYtHb3lK8/SMV35bZePbSmWvKesTTHzLzAGXOqqHN4vjhSXUfIwZBUR+wgFuUuS3xRMyTDbpT43Ei5+eb"
+
+  val isInit = RiskStubAPI.initAppsecEverisk(this, key)
+  Log.d("Status", "is init everisk:  $isInit")
+}
+
+private fun setUserID(userID: String): String? {
+  return try {
+    RiskStubAPI.setUserId(this, userID)
+    "success"
+
+  } catch (e: Exception) {
+    Log.e("nativeFunction",  "Error setting user ID", e)
+    null
+  }
+}
+
+override fun onCreate(savedInstanceState: Bundle?) {
+  super.onCreate(savedInstanceState)
+
+  registerSecurityEventCallback()
+  registerDeviceInfoCallback
+  setUserID("Custom_USER_ID")
+  initializeRiskStubAPI()
 }
