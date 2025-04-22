@@ -27,7 +27,7 @@ class MainActivity : ReactActivity() {
     super.onCreate(null)
 
     registerSecurityEventCallback()
-    registerDeviceInfoCallback()
+    registerDEVINFOCallback()
     setUserID("Custom_USER_ID")
     initializeRiskStubAPI()
   }
@@ -75,13 +75,13 @@ class MainActivity : ReactActivity() {
     }, Type.RISKEVENT, 0.5)
   }
 
-  private fun registerDeviceInfoCallback() {
+  private fun registerDEVINFOCallback() {
     RiskStubAPI.registerService(object : CallBack {
       override fun onResult(type: Type, result: Any) {
         val jsonObject = result as JSONObject
         DEVINFO = jsonObject
       }
-    }, Type.DEVICEINFO, 0.5)
+    }, Type.DEVINFO, 0.5)
   }
 
   private fun initializeRiskStubAPI() {
