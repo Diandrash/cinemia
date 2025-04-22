@@ -12,9 +12,9 @@ import expo.modules.ReactActivityDelegateWrapper
 import expo.modules.splashscreen.SplashScreenManager
 
 // ✅ Import API dari vendor SDK kamu
-import com.seciron.riskapi.RiskStubAPI
-import com.seciron.riskapi.CallBack
-import com.seciron.riskapi.Type
+import com.everisk.sdk.RiskStubAPI
+import com.everisk.sdk.CallBack
+import com.everisk.sdk.Type
 
 class MainActivity : ReactActivity() {
 
