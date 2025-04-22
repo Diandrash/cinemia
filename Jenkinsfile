@@ -59,12 +59,14 @@ pipeline {
             }
         }
 
-        stage('Build Android APK') {
+
+        // Note : If you need apk build use this --profile preview
+        stage('Build Android APK/AAB') {
             steps {
                 bat '''
                     SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
                     set PATH=C:\\Users\\farel.shadeva\\AppData\\Local\\Programs\\Git\\cmd;%PATH%
-                    eas build -p android --non-interactive --no-wait --json > build-info.json
+                    eas build -p android --profile preview --non-interactive --no-wait --json > build-info.json
                 '''
             }
         }
