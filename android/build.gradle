@@ -37,5 +37,12 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
+
+        
+        // IronSKY
+        flatDir {
+            dirs '../libs' // jika kamu simpan di android/libs
+        }
+
     }
 }

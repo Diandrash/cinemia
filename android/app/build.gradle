@@ -146,16 +146,9 @@ android {
     }
 }
 
-// IronSKY
-repositories {
-    flatDir {
-        dirs = ['libs']
-    }
-}
-
 dependencies {
 
-    // IronSKY
+        // IronSKY
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation(name:'appsec-sdk-release-public-2024051601',ext:'aar')
 
