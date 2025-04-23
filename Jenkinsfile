@@ -64,59 +64,59 @@ pipeline {
                 bat '''
                     SET PATH=C:\\Users\\farel.shadeva\\AppData\\Roaming\\npm;%PATH%
                     set PATH=C:\\Users\\farel.shadeva\\AppData\\Local\\Programs\\Git\\cmd;%PATH%
-                    eas build -p android --non-interactive --no-wait --json > build-info.json
+                    eas build -p android --profile preview --non-interactive --no-wait --json > build-info.json
                 '''
             }
         }
 
-        stage('Wait & Download APK') {
-            environment {
-                AUTH = "Bearer ${EXPO_TOKEN}"
-            }
-            steps {
-                script {
-                    // Ambil buildId dari file JSON hasil build
-                    def buildId = bat(
-                        script: 'powershell -Command "(Get-Content build-info.json | ConvertFrom-Json).id"',
-                        returnStdout: true
-                    ).trim()
+        // stage('Wait & Download APK') {
+        //     environment {
+        //         AUTH = "Bearer ${EXPO_TOKEN}"
+        //     }
+        //     steps {
+        //         script {
+        //             // Ambil buildId dari file JSON hasil build
+        //             def buildId = bat(
+        //                 script: 'powershell -Command "(Get-Content build-info.json | ConvertFrom-Json).id"',
+        //                 returnStdout: true
+        //             ).trim()
                     
-                    echo "Build ID: ${buildId}"
+        //             echo "Build ID: ${buildId}"
 
-                    // Polling Expo sampai statusnya "finished"
-                    def buildUrl = ""
-                    timeout(time: 15, unit: 'MINUTES') {
-                        waitUntil {
-                            bat """
-                                 powershell -Command "$headers = @{ Authorization = 'Bearer ${EXPO_TOKEN}' }; Invoke-RestMethod -Uri 'https://api.expo.dev/v2/builds/${buildId}' -Headers \$headers | ConvertTo-Json -Depth 10 > build-result.json"
-                            """
+        //             // Polling Expo sampai statusnya "finished"
+        //             def buildUrl = ""
+        //             timeout(time: 15, unit: 'MINUTES') {
+        //                 waitUntil {
+        //                     bat """
+        //                          powershell -Command "$headers = @{ Authorization = 'Bearer ${EXPO_TOKEN}' }; Invoke-RestMethod -Uri 'https://api.expo.dev/v2/builds/${buildId}' -Headers \$headers | ConvertTo-Json -Depth 10 > build-result.json"
+        //                     """
 
-                            def result = readFile('build-result.json')
-                            if (result.contains('"status":"finished"')) {
-                                def match = result =~ /"buildUrl"\s*:\s*"([^"]+\.apk)"/
-                                if (match) {
-                                    buildUrl = match[0][1]
-                                    echo "Download URL: ${buildUrl}"
-                                }
-                                return true
-                            } else if (result.contains('"status":"errored"')) {
-                                error("Expo build failed.")
-                            }
-                            return false
-                        }
-                    }
+        //                     def result = readFile('build-result.json')
+        //                     if (result.contains('"status":"finished"')) {
+        //                         def match = result =~ /"buildUrl"\s*:\s*"([^"]+\.apk)"/
+        //                         if (match) {
+        //                             buildUrl = match[0][1]
+        //                             echo "Download URL: ${buildUrl}"
+        //                         }
+        //                         return true
+        //                     } else if (result.contains('"status":"errored"')) {
+        //                         error("Expo build failed.")
+        //                     }
+        //                     return false
+        //                 }
+        //             }
 
-                    // Download APK
-                    if (buildUrl) {
-                        bat "mkdir build-output"
-                        bat "curl -L -o build-output/app.apk ${buildUrl}"
-                        echo "APK downloaded to: build-output/app.apk"
-                    } else {
-                        error("Failed to retrieve APK download URL.")
-                    }
-                }
-            }
-        }
+        //             // Download APK
+        //             if (buildUrl) {
+        //                 bat "mkdir build-output"
+        //                 bat "curl -L -o build-output/app.apk ${buildUrl}"
+        //                 echo "APK downloaded to: build-output/app.apk"
+        //             } else {
+        //                 error("Failed to retrieve APK download URL.")
+        //             }
+        //         }
+        //     }
+        // }
 
     }
 
