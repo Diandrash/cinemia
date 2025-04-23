@@ -121,9 +121,6 @@ pipeline {
     }
 
     post {
-        success {
-            archiveArtifacts artifacts: 'build-output/app.apk', fingerprint: true
-        }
         always {
             echo 'Test completed'
         }
